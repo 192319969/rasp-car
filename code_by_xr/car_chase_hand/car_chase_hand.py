@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import onnxruntime as ort
+import car
+import pid
 import time
 
 def plot_one_box(x, img, color=None, label=None, line_thickness=None):
@@ -106,7 +108,6 @@ def infer_img(img0,net,model_h,model_w,nl,na,stride,anchor_grid,thred_nms=0.4,th
 
 
 
-
 if __name__ == "__main__":
 
     # 模型加载
@@ -133,8 +134,16 @@ if __name__ == "__main__":
     flag_det = False
     while True:
         success, img0 = cap.read()
+
+        # 获取图像的中心点坐标
+        height, width, _ = img0.shape  # 获取图像的高度和宽度
+        xMid = width / 2 * 1.0  # 计算图像中心点的 x 坐标
+        yMid = height / 2 * 1.0  # 计算图像中心点的 y 坐标
+
+        # 获取当前帧成功
         if success:
 
+            # 开始识别物体
             if flag_det:
                 t1 = time.time()
                 det_boxes,scores,ids = infer_img(img0,net,model_h,model_w,nl,na,stride,anchor_grid,thred_nms=0.4,thred_cond=0.5)
@@ -145,6 +154,31 @@ if __name__ == "__main__":
                     label = '%s:%.2f'%(dic_labels[id],score)
 
                     plot_one_box(box.astype(np.int16), img0, color=(255,0,0), label=label, line_thickness=None)
+
+                    pid.ballX=int((box[0] + box[2]) / 2)
+                    pid.ballY=int((box[1] + box[3]) / 2)
+
+                    xVariance = (pid.ballX - xMid) / xMid
+                    yVariance = (pid.ballY - yMid) / yMid
+                    pid.x_PID['error'] = xVariance / xMid
+                    pid.y_PID['error'] = yVariance / yMid
+                    pid.x_PID = pid.PID(pid.x_PID)
+                    pid.y_PID = pid.PID(pid.y_PID)
+
+                    pid.leftSpeed = (pid.speedDef * pid.y_PID['PID']) + (pid.maxDiff * pid.x_PID['PID'])
+                    pid.rightSpeed = (pid.speedDef * pid.y_PID['PID']) - (pid.maxDiff * pid.x_PID['PID'])
+
+                    if pid.leftSpeed > (pid.speedDef + pid.maxDiff):
+                        pid.leftSpeed = (pid.speedDef + pid.maxDiff)
+                    if pid.leftSpeed < -(pid.speedDef + pid.maxDiff):
+                        pid.leftSpeed = -(pid.speedDef + pid.maxDiff)
+                    if pid.rightSpeed > (pid.speedDef + pid.maxDiff):
+                        pid.rightSpeed = (pid.speedDef + pid.maxDiff)
+                    if pid.rightSpeed < -(pid.speedDef + pid.maxDiff):
+                        pid.rightSpeed = -(pid.speedDef + pid.maxDiff)
+
+                # write(log)
+                car.drive_PID(pid.leftSpeed, pid.rightSpeed, pid.driveTime)
 
                 str_FPS = "FPS: %.2f"%(1./(t2-t1))
 
