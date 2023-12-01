@@ -135,6 +135,8 @@ def front_left(speed=def_SPEED):
     for motor in left_motors:
         set_motor_direct(BACKWARD, motor)
     set_motor_speed(left_motors, speed)
+
+
 #    time.sleep((angle / 60) * factor["front_left"])
 
 
@@ -146,6 +148,8 @@ def back_left(speed=def_SPEED):
     for motor in left_motors:
         set_motor_direct(FORWARD, motor)
     set_motor_speed(left_motors, speed)
+
+
 #    time.sleep((angle / 60) * factor["back_left"])
 
 
@@ -157,7 +161,7 @@ def front_right(speed=def_SPEED):
     for motor in right_motors:
         set_motor_direct(BACKWARD, motor)
     set_motor_speed(right_motors, speed)
-    #time.sleep((angle / 60) * factor["front_right"])
+    # time.sleep((angle / 60) * factor["front_right"])
 
 
 # 控制小车后前转
@@ -168,6 +172,8 @@ def back_right(speed=def_SPEED):
     for motor in right_motors:
         set_motor_direct(FORWARD, motor)
     set_motor_speed(right_motors, speed)
+
+
 #    time.sleep((angle / 60) * factor["back_right"])
 
 
@@ -194,6 +200,59 @@ def initial():
 def exit():
     stop()
     clean_gpio()
+
+
+def turn_left(speed=def_SPEED):
+    GPIO.output(pins["front_left_in1"], GPIO.LOW)
+    GPIO.output(pins["front_left_in2"], GPIO.HIGH)
+    pwms["front_left_pwm"].ChangeDutyCycle(speed)
+    GPIO.output(pins["back_left_in1"], GPIO.LOW)
+    GPIO.output(pins["back_left_in2"], GPIO.HIGH)
+    pwms["back_left_pwm"].ChangeDutyCycle(speed+10)
+    GPIO.output(pins["front_right_in1"], GPIO.HIGH)
+    GPIO.output(pins["front_right_in2"], GPIO.LOW)
+    pwms["front_right_pwm"].ChangeDutyCycle(speed)
+    GPIO.output(pins["back_right_in1"], GPIO.HIGH)
+    GPIO.output(pins["back_right_in2"], GPIO.LOW)
+    pwms["back_right_pwm"].ChangeDutyCycle(speed)
+
+
+def turn_right(speed=def_SPEED):
+    GPIO.output(pins["front_left_in1"], GPIO.HIGH)
+    GPIO.output(pins["front_left_in2"], GPIO.LOW)
+    pwms["front_left_pwm"].ChangeDutyCycle(speed)
+    GPIO.output(pins["back_left_in1"], GPIO.HIGH)
+    GPIO.output(pins["back_left_in2"], GPIO.LOW)
+    pwms["back_left_pwm"].ChangeDutyCycle(speed+10)
+    GPIO.output(pins["front_right_in1"], GPIO.LOW)
+    GPIO.output(pins["front_right_in2"], GPIO.HIGH)
+    pwms["front_right_pwm"].ChangeDutyCycle(speed)
+    GPIO.output(pins["back_right_in1"], GPIO.LOW)
+    GPIO.output(pins["back_right_in2"], GPIO.HIGH)
+    pwms["back_right_pwm"].ChangeDutyCycle(speed)
+
+def left_front_wheel(speed=def_SPEED):
+    GPIO.output(pins["front_left_in1"], GPIO.HIGH)
+    GPIO.output(pins["front_left_in2"], GPIO.LOW)
+    pwms["front_left_pwm"].ChangeDutyCycle(speed)
+
+
+def left_back_wheel(speed=def_SPEED):
+    GPIO.output(pins["back_left_in1"], GPIO.HIGH)
+    GPIO.output(pins["back_left_in2"], GPIO.LOW)
+    pwms["back_left_pwm"].ChangeDutyCycle(speed)
+
+
+def right_front_wheel(speed=def_SPEED):
+    GPIO.output(pins["front_right_in1"], GPIO.HIGH)
+    GPIO.output(pins["front_right_in2"], GPIO.LOW)
+    pwms["front_right_pwm"].ChangeDutyCycle(speed)
+
+
+def right_back_wheel(speed=def_SPEED):
+    GPIO.output(pins["back_right_in1"], GPIO.HIGH)
+    GPIO.output(pins["back_right_in2"], GPIO.LOW)
+    pwms["back_right_pwm"].ChangeDutyCycle(speed)
 
 
 def speed_test():

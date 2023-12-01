@@ -70,9 +70,16 @@ if __name__ == "__main__":
                 # write(log)
                 if pid.is_at_center(xMid):
                     print(time.time(),":ball is at:", pid.ballX,"at the mid")
-                    #car.move_forward(15)
+                    car.move_forward(15)
                 else:
                     print(time.time(), ":ball is at:", pid.ballX, "not at the mid")
+                    if pid.ballX < xMid:
+                        car.turn_left()
+                        time.sleep(0.01)
+                    else:
+                        car.turn_right()
+                        time.sleep(0.01)
+
                     #car.drive_PID(pid.leftSpeed, pid.rightSpeed, pid.driveTime)
 
                 str_FPS = "FPS: %.2f" % (1. / (t2 - t1))

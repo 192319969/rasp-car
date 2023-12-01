@@ -5,7 +5,8 @@ import time
 if __name__ == "__main__":
     car.initial()
 
-    car.front_left(15)
-    time.sleep(car.def_TIME)
+    car.left_front_wheel(15)
+
+    time.sleep(5)
 
     car.exit()
