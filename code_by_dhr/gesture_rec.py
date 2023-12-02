@@ -160,3 +160,7 @@ if __name__ == "__main__":
             print(flag_det)
 
     cap.release()
+<<<<<<< HEAD
+=======
+
+>>>>>>> cfb0573c4e1e84b478e4081c30e6c3c700447933
