@@ -5,6 +5,8 @@ import car
 import pid
 import time
 import recognition as reco
+import Ultrasonic as ultra
+
 
 if __name__ == "__main__":
 
@@ -29,6 +31,7 @@ if __name__ == "__main__":
 
     #小车电机初始化
     car.initial()
+    ultra.inital()
 
     video = 0
     cap = cv2.VideoCapture(video)
@@ -69,8 +72,14 @@ if __name__ == "__main__":
 
                 # write(log)
                 if pid.is_at_center(xMid):
-                    print(time.time(),":ball is at:", pid.ballX,"at the mid")
-                    car.move_forward(15)
+                    print(time.time(), ":ball is at:", pid.ballX, "at the mid")
+
+                    if ultra.distance() >= 20 :
+                        car.move_forward(15)
+                    else:
+                        car.stop()
+
+
                 else:
                     print(time.time(), ":ball is at:", pid.ballX, "not at the mid")
                     if pid.ballX < xMid:
