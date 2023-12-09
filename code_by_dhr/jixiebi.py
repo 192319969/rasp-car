@@ -72,14 +72,14 @@ def main():
     time.sleep(1)
     rotate_servo(3,150,180)
     time.sleep(1)
-OBOBOB    rotate_servo(2,80,0)
+    rotate_servo(2,80,0)
     time.sleep(1)
     rotate_servo(5,50,20)
 def stop_all_servos(pca):
-OBOBOB    pca.channels[1].duty_cycle = 0
+    pca.channels[1].duty_cycle = 0
     pca.channels[2].duty_cycle = 0
     pca.channels[3].duty_cycle = 0
-OBOBOB    pca.channels[5].duty_cycle = 0
+    pca.channels[5].duty_cycle = 0
 if __name__ == '__main__':
     main()
     stop_all_servos(pca)
