@@ -58,8 +58,9 @@ if __name__ == "__main__":
                     label = '%s:%.2f' % (dic_labels[id], score)
 
                     reco.plot_one_box(box.astype(np.int16), img0, color=(255, 0, 0), label=label, line_thickness=None)
+                    #找到所有球中最左边的球
+                    pid.get_ball_pos_min(box[0], box[2])
 
-                    pid.get_ball_pos(box[0], box[2])
 
                     # xVariance = (pid.ballX - xMid) / xMid
                     # yVariance = (pid.ballY - yMid) / yMid
@@ -71,23 +72,32 @@ if __name__ == "__main__":
                     # pid.cal_speed()
 
                 # write(log)
-                if pid.is_at_center(xMid):
-                    print(time.time(), ":ball is at:", pid.ballX, "at the mid")
-
-                    if ultra.distance() >= 20 :
-                        car.move_forward(15)
-                    else:
-                        car.stop()
-
-
+                #判断视野内是否有物体
+                if ids.size == 0 :
+                    #视野内无物体，小车向右旋转一定角度
+                    #for i in range(): 可以调整旋转角度
+                    car.turn_right()
+                    time.sleep(0.01)
                 else:
-                    print(time.time(), ":ball is at:", pid.ballX, "not at the mid")
-                    if pid.ballX < xMid:
-                        car.turn_left()
-                        time.sleep(0.01)
+                    #视野内有小球
+                    if pid.is_at_center(xMid):
+                        print(time.time(), ":ball is at:", pid.ballX_min, "at the mid")
+
+                        if ultra.distance() >= 20 :
+                            car.move_forward(15)
+                        elif ultra.distance() < 15 :
+                            car.move_backward(15)
+                        else :
+                            car.stop()
+                            #捡球
                     else:
-                        car.turn_right()
-                        time.sleep(0.01)
+                        print(time.time(), ":ball is at:", pid.ballX_min, "not at the mid")
+                        if pid.ballX_min < xMid:
+                            car.turn_left()
+                            time.sleep(0.01)
+                        else:
+                            car.turn_right()
+                            time.sleep(0.01)
 
                     #car.drive_PID(pid.leftSpeed, pid.rightSpeed, pid.driveTime)
 
