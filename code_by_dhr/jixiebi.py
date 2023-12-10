@@ -1,14 +1,12 @@
 import time
 import math
-from board import SCL, SDA
+import board
 import busio
-
 # Import the PCA9685 module. Available in the bundle and here:
 #   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
 from adafruit_motor import servo
 from adafruit_pca9685 import PCA9685
-
-i2c = busio.I2C(SCL, SDA)
+i2c = busio.I2C(board.SCL, board.SDA)
 
 # Create a simple PCA9685 class instance.
 pca = PCA9685(i2c)
@@ -25,7 +23,7 @@ servo5 = servo.Servo(pca.channels[5])
 # range, but the default is to use 180 degrees. You can specify the expected range if you wish:
 
 def rotate_servo(servo, current_angle, target_angle, delay=0.05):
-    step = 1 if target_angle > current_angle else -1
+    step = 2 if target_angle > current_angle else -2
     if servo == 1:
         for angle in range(current_angle,target_angle,step):
             servo1.angle = angle
@@ -38,7 +36,7 @@ def rotate_servo(servo, current_angle, target_angle, delay=0.05):
         servo2.angle = target_angle
     elif servo == 3:
         for angle in range(current_angle,target_angle,step):
-            servo3.angle = angle
+            servo3.angle = angle 
             time.sleep(delay)
         servo3.angle = target_angle
     elif servo == 4:
@@ -51,37 +49,33 @@ def rotate_servo(servo, current_angle, target_angle, delay=0.05):
             servo5.angle = angle
             time.sleep(delay)
         servo5.angle = target_angle
-def main():
+def zhuaqu():
     rotate_servo(1,90,100)
-    time.sleep(1)
+    time.sleep(0.5)
     rotate_servo(2,10,0)
-    time.sleep(1)
+    time.sleep(0.5)
     rotate_servo(3,170,180)
-    time.sleep(1)
-    rotate_servo(5,15,20)
-    time.sleep(1)
-    rotate_servo(2,0,80)
-    time.sleep(1)
-    rotate_servo(3,180,150)
-    time.sleep(1)
+    time.sleep(0.5)
+    rotate_servo(5,15,10)
+    time.sleep(0.5)
+    rotate_servo(2,0,90)
+    time.sleep(0.5)
+    rotate_servo(3,180,140)
+    time.sleep(0.5)
     rotate_servo(1,100,0)
-    time.sleep(1)
-    rotate_servo(5,20,50)
-    time.sleep(1)
+    time.sleep(0.5)
+    rotate_servo(5,20,60)
+    time.sleep(0.5)
     rotate_servo(1,0,100)
-    time.sleep(1)
+    time.sleep(0.5)
     rotate_servo(3,150,180)
-    time.sleep(1)
+    time.sleep(0.5)
     rotate_servo(2,80,0)
-    time.sleep(1)
+    time.sleep(0.5)
     rotate_servo(5,50,20)
 def stop_all_servos(pca):
     pca.channels[1].duty_cycle = 0
     pca.channels[2].duty_cycle = 0
     pca.channels[3].duty_cycle = 0
     pca.channels[5].duty_cycle = 0
-if __name__ == '__main__':
-    main()
-    stop_all_servos(pca)
-    pca.deinit()
 
