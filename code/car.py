@@ -165,13 +165,13 @@ def move_backward(speed=def_SPEED):
 
 
 # 控制小车后前转
-def back_right(speed=def_SPEED):
-    for motor in left_motors:
-        set_motor_direct(BACKWARD, motor)
-    set_motor_speed(left_motors, speed)
-    for motor in right_motors:
-        set_motor_direct(FORWARD, motor)
-    set_motor_speed(right_motors, speed)
+# def back_right(speed=def_SPEED):
+#     for motor in left_motors:
+#         set_motor_direct(BACKWARD, motor)
+#     set_motor_speed(left_motors, speed)
+#     for motor in right_motors:
+#         set_motor_direct(FORWARD, motor)
+#     set_motor_speed(right_motors, speed)
 
 
 #    time.sleep((angle / 60) * factor["back_right"])
